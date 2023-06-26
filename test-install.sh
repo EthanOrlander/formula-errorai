@@ -1,0 +1,1 @@
+brew install --debug --verbose ./Formula/errorai.rb
