@@ -1,4 +1,4 @@
-class ErrorAI < Formula
+class Errorai < Formula
     include Language::Python::Virtualenv
     desc "An AI tool for fixing errors in code"
     homepage "https://github.com/ethanorlander/"
