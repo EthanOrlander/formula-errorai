@@ -1,4 +1,4 @@
-# formula-errorai
+# ErrorAI Homebrew Installer
 
 ## Installation
 
