@@ -1,5 +1,4 @@
 class Errorai < Formula
-    include Language::Python::Virtualenv
     desc "An AI tool for fixing errors in code"
     homepage "https://github.com/ethanorlander/"
     url "https://s3.amazonaws.com/errorai/errorai-0.1.0.tar.gz"
@@ -10,12 +9,14 @@ class Errorai < Formula
       puts "Copying shell files..."
       FileUtils.mkdir_p("#{ENV["HOME"]}/.errorai/shell")
       FileUtils.mkdir_p("#{ENV["HOME"]}/.errorai/tmp")
-      FileUtils.cp_r("shell/*", "#{ENV["HOME"]}/.errorai/shell")
-
+      Dir.glob(buildpath/"shell/*").each do |file|
+        FileUtils.cp(file, "#{ENV["HOME"]}/.errorai/shell")
+      end
+  
       # Copy executable files to /usr/local/errorai
       puts "Copying executable files..."
-      system "sudo", "cp", "-R", "dist/errorai", "/usr/local"
-
+      system "sudo", "cp", "-R", buildpath/"dist/errorai", "/usr/local"
+  
       # Add to ~/.zshrc
       puts "Adding to ~/.zshrc..."
       File.open("#{ENV["HOME"]}/.zshrc", "a") do |file|
@@ -24,7 +25,7 @@ class Errorai < Formula
         file.puts 'export PATH="/usr/local/errorai:$PATH"'
         file.puts '[[ -f "$HOME/.errorai/shell/zshrc.zsh" ]] && builtin source "$HOME/.errorai/shell/zshrc.zsh"'
       end
-
+  
       puts "Installation complete!"
     end
   
