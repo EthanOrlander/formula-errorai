@@ -6,26 +6,29 @@ class Errorai < Formula
     sha256 "9205e7c3990e54b364ba55cd136a9649fd192b026fbd150888cfd3deea2a784f"
     
     def install
+      prefix_path = prefix/"errorai"
+
+      # Copy shell files to ~/.errorai/shell
       puts "Copying shell files..."
       FileUtils.mkdir_p("#{ENV["HOME"]}/.errorai/shell")
       FileUtils.mkdir_p("#{ENV["HOME"]}/.errorai/tmp")
       Dir.glob(buildpath/"shell/*").each do |file|
         FileUtils.cp(file, "#{ENV["HOME"]}/.errorai/shell")
       end
-  
-      # Copy executable files to /usr/local/errorai
+
+      # Copy executable files to Homebrew prefix
       puts "Copying executable files..."
-      system "sudo", "cp", "-R", buildpath/"dist/errorai", "/usr/local"
-  
+      prefix_path.install Dir["dist/errorai/*"]
+
       # Add to ~/.zshrc
       puts "Adding to ~/.zshrc..."
       File.open("#{ENV["HOME"]}/.zshrc", "a") do |file|
         file.puts ""
         file.puts "# ErrorAI"
-        file.puts 'export PATH="/usr/local/errorai:$PATH"'
-        file.puts '[[ -f "$HOME/.errorai/shell/zshrc.zsh" ]] && builtin source "$HOME/.errorai/shell/zshrc.zsh"'
+        file.puts "export PATH=\"#{prefix_path}/bin:$PATH\""
+        file.puts "[[ -f \"$HOME/.errorai/shell/zshrc.zsh\" ]] && builtin source \"$HOME/.errorai/shell/zshrc.zsh\""
       end
-  
+
       puts "Installation complete!"
     end
   
